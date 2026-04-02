@@ -1,0 +1,7 @@
+node_modules
+dist
+build
+.DS_Store
+*.log
+backend/src/data/templates/*.json
+backend/src/data/exports/*.docx
