@@ -128,3 +128,33 @@ npm run build
 
 - 自定义模板保存路径：`backend/src/data/templates/*.json`
 - 如果需要团队统一样式，可直接把模板 JSON 版本化管理
+
+## 桌面可执行版（Windows）
+
+项目已集成 Electron 打包。
+
+1. 安装依赖：
+
+```bash
+cmd /c npm install
+```
+
+2. 生成安装包（`exe`）：
+
+```bash
+cmd /c npm run pack:win
+```
+
+3. 生成免安装便携版（`exe`）：
+
+```bash
+cmd /c npm run pack:portable
+```
+
+4. 产物目录：
+
+- `release/`（例如 `MarkdownToDocx Setup x.x.x.exe`、`MarkdownToDocx x.x.x.exe`）
+
+说明：
+- 桌面版启动后会自动在本地启动内置后端服务并加载界面。
+- 桌面版自定义模板默认保存在用户目录，不会写入安装目录。

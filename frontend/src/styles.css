@@ -321,27 +321,30 @@ textarea:focus {
 }
 
 .preview-page h1 {
-  font-family: var(--h1-font);
+  font-family: var(--h1-font-en), var(--h1-font-zh), var(--h1-font);
   font-size: var(--h1-size);
   font-weight: var(--h1-weight);
+  color: var(--h1-color);
   margin-top: var(--h1-before);
   margin-bottom: var(--h1-after);
   text-align: var(--h1-align);
 }
 
 .preview-page h2 {
-  font-family: var(--h2-font);
+  font-family: var(--h2-font-en), var(--h2-font-zh), var(--h2-font);
   font-size: var(--h2-size);
   font-weight: var(--h2-weight);
+  color: var(--h2-color);
   margin-top: var(--h2-before);
   margin-bottom: var(--h2-after);
   text-align: var(--h2-align);
 }
 
 .preview-page h3 {
-  font-family: var(--h3-font);
+  font-family: var(--h3-font-en), var(--h3-font-zh), var(--h3-font);
   font-size: var(--h3-size);
   font-weight: var(--h3-weight);
+  color: var(--h3-color);
   margin-top: var(--h3-before);
   margin-bottom: var(--h3-after);
   text-align: var(--h3-align);

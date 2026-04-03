@@ -6,25 +6,34 @@
     description: "适合学术论文与课程报告，正文宋体两端对齐，标题层级清晰。",
     config: {
       heading1: {
-        fontFamily: "Times New Roman",
+        fontFamily: "黑体",
+        chineseFontFamily: "黑体",
+        englishFontFamily: "Times New Roman",
         fontSize: 18,
         bold: true,
+        color: "000000",
         spacingBefore: 12,
         spacingAfter: 6,
         align: "center"
       },
       heading2: {
-        fontFamily: "Times New Roman",
+        fontFamily: "黑体",
+        chineseFontFamily: "黑体",
+        englishFontFamily: "Times New Roman",
         fontSize: 16,
         bold: true,
+        color: "000000",
         spacingBefore: 10,
         spacingAfter: 6,
         align: "left"
       },
       heading3: {
-        fontFamily: "Times New Roman",
+        fontFamily: "黑体",
+        chineseFontFamily: "黑体",
+        englishFontFamily: "Times New Roman",
         fontSize: 14,
         bold: true,
+        color: "000000",
         spacingBefore: 8,
         spacingAfter: 4,
         align: "left"
@@ -84,25 +93,34 @@
     description: "适合商务报告与项目文档，正文更疏朗，表格全边框。",
     config: {
       heading1: {
-        fontFamily: "Times New Roman",
+        fontFamily: "黑体",
+        chineseFontFamily: "黑体",
+        englishFontFamily: "Times New Roman",
         fontSize: 20,
         bold: true,
+        color: "000000",
         spacingBefore: 14,
         spacingAfter: 8,
         align: "left"
       },
       heading2: {
-        fontFamily: "Times New Roman",
+        fontFamily: "黑体",
+        chineseFontFamily: "黑体",
+        englishFontFamily: "Times New Roman",
         fontSize: 16,
         bold: true,
+        color: "000000",
         spacingBefore: 12,
         spacingAfter: 6,
         align: "left"
       },
       heading3: {
-        fontFamily: "Times New Roman",
+        fontFamily: "黑体",
+        chineseFontFamily: "黑体",
+        englishFontFamily: "Times New Roman",
         fontSize: 14,
         bold: true,
+        color: "000000",
         spacingBefore: 10,
         spacingAfter: 6,
         align: "left"

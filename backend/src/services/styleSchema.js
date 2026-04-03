@@ -11,25 +11,34 @@ const headingNumberFormats = [
 
 export const defaultStyleConfig = {
   heading1: {
-    fontFamily: "Times New Roman",
+    fontFamily: "黑体",
+    chineseFontFamily: "黑体",
+    englishFontFamily: "Times New Roman",
     fontSize: 18,
     bold: true,
+    color: "000000",
     spacingBefore: 12,
     spacingAfter: 6,
     align: "center"
   },
   heading2: {
-    fontFamily: "Times New Roman",
+    fontFamily: "黑体",
+    chineseFontFamily: "黑体",
+    englishFontFamily: "Times New Roman",
     fontSize: 16,
     bold: true,
+    color: "000000",
     spacingBefore: 10,
     spacingAfter: 6,
     align: "left"
   },
   heading3: {
-    fontFamily: "Times New Roman",
+    fontFamily: "黑体",
+    chineseFontFamily: "黑体",
+    englishFontFamily: "Times New Roman",
     fontSize: 14,
     bold: true,
+    color: "000000",
     spacingBefore: 8,
     spacingAfter: 4,
     align: "left"
@@ -94,7 +103,10 @@ const textStyleSchema = z.object({
 });
 
 const headingSchema = textStyleSchema.extend({
-  bold: z.boolean()
+  chineseFontFamily: z.string().min(1),
+  englishFontFamily: z.string().min(1),
+  bold: z.boolean(),
+  color: z.string().min(3)
 });
 
 const headingNumberingSchema = z.object({
@@ -183,6 +195,24 @@ function deepMerge(base, patch) {
 export function normalizeStyleConfig(inputConfig) {
   const candidate = partialStyleSchema.parse(inputConfig ?? {});
   const merged = deepMerge(defaultStyleConfig, candidate);
+
+  for (const key of ["heading1", "heading2", "heading3"]) {
+    if (!merged[key].chineseFontFamily) {
+      merged[key].chineseFontFamily = merged[key].fontFamily;
+    }
+
+    if (!merged[key].englishFontFamily) {
+      merged[key].englishFontFamily = "Times New Roman";
+    }
+
+    if (!merged[key].fontFamily) {
+      merged[key].fontFamily = merged[key].chineseFontFamily;
+    }
+
+    if (!merged[key].color) {
+      merged[key].color = "000000";
+    }
+  }
 
   if (!merged.paragraph.chineseFontFamily) {
     merged.paragraph.chineseFontFamily = merged.paragraph.fontFamily;

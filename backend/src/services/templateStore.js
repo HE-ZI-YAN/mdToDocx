@@ -4,10 +4,19 @@ import sanitize from "sanitize-filename";
 import { builtinTemplates } from "../data/builtinTemplates.js";
 import { normalizeStyleConfig, normalizeTemplateName } from "./styleSchema.js";
 
-const templatesDir = path.resolve(process.cwd(), "backend/src/data/templates");
+function resolveTemplatesDir() {
+  const customDir = process.env.TEMPLATE_STORAGE_DIR;
+  if (customDir) {
+    return path.resolve(customDir);
+  }
+
+  return path.resolve(process.cwd(), "backend", "src", "data", "templates");
+}
 
 async function ensureTemplateDirectory() {
+  const templatesDir = resolveTemplatesDir();
   await fs.mkdir(templatesDir, { recursive: true });
+  return templatesDir;
 }
 
 function fileNameToTemplateName(fileName) {
@@ -15,7 +24,7 @@ function fileNameToTemplateName(fileName) {
 }
 
 export async function listTemplates() {
-  await ensureTemplateDirectory();
+  const templatesDir = await ensureTemplateDirectory();
 
   const customFiles = await fs.readdir(templatesDir);
   const customTemplates = [];
@@ -53,7 +62,7 @@ export async function saveTemplate({ name, description, config }) {
     throw new Error("模板名称不能为空");
   }
 
-  await ensureTemplateDirectory();
+  const templatesDir = await ensureTemplateDirectory();
 
   const safeName = sanitize(normalizedName).replace(/\s+/g, "_");
   if (!safeName) {

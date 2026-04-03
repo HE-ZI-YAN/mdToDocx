@@ -44,6 +44,15 @@ function inchToTwip(inch) {
   return Math.round(Number(inch || 0) * 1440);
 }
 
+function normalizeHexColor(value, fallback = "000000") {
+  const normalized = String(value ?? "")
+    .trim()
+    .replace(/^#/, "")
+    .toUpperCase();
+
+  return /^[0-9A-F]{6}$/.test(normalized) ? normalized : fallback;
+}
+
 function mapAlignment(align) {
   if (align === "center") return AlignmentType.CENTER;
   if (align === "right") return AlignmentType.RIGHT;
@@ -206,7 +215,7 @@ function buildHeading(node, style, headingNumbering) {
         ...style,
         lineSpacingType: "single"
       },
-      { bold: style.bold }
+      { bold: style.bold, color: normalizeHexColor(style.color) }
     )
   };
 
@@ -337,10 +346,36 @@ function buildTable(node, config) {
         cellParagraphs.push(new Paragraph(""));
       }
 
-      const headerBottomBorder =
-        tableStyle.borderType === "threeLine" && rowIndex === 0
-          ? { style: BorderStyle.SINGLE, size: 4, color: "000000" }
-          : { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
+      const isThreeLine = tableStyle.borderType === "threeLine";
+      const isHeaderRow = rowIndex === 0;
+      const isLastRow = rowIndex === rowCount - 1;
+
+      let cellBorders;
+      if (isThreeLine) {
+        const borderStrong = { style: BorderStyle.SINGLE, size: 8, color: "000000" };
+        const borderMiddle = { style: BorderStyle.SINGLE, size: 4, color: "000000" };
+
+        const nextBorders = {};
+
+        // Fallback top border for the first row in Word/WPS variants.
+        if (isHeaderRow) {
+          nextBorders.top = borderStrong;
+        }
+
+        // Three-line table middle border (header separator).
+        if (isHeaderRow && rowCount > 1) {
+          nextBorders.bottom = borderMiddle;
+        }
+
+        // Fallback bottom border for the last row in Word/WPS variants.
+        if (isLastRow) {
+          nextBorders.bottom = borderStrong;
+        }
+
+        if (Object.keys(nextBorders).length > 0) {
+          cellBorders = nextBorders;
+        }
+      }
 
       return new TableCell({
         children: cellParagraphs,
@@ -350,15 +385,7 @@ function buildTable(node, config) {
           left: ptToTwip(tableStyle.cellPadding),
           right: ptToTwip(tableStyle.cellPadding)
         },
-        borders:
-          tableStyle.borderType === "threeLine"
-            ? {
-                top: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                left: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                right: { style: BorderStyle.NONE, size: 0, color: "FFFFFF" },
-                bottom: headerBottomBorder
-              }
-            : undefined,
+        borders: cellBorders,
         width: tableStyle.autoColumnWidth
           ? undefined
           : {

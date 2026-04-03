@@ -174,6 +174,10 @@ export default function App() {
       updateStyleField("paragraph", "fontFamily", nextValue);
     }
 
+    if (section.startsWith("heading") && field === "chineseFontFamily") {
+      updateStyleField(section, "fontFamily", nextValue);
+    }
+
     updateStyleField(section, field, nextValue);
   };
 

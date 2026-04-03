@@ -1,7 +1,25 @@
 ﻿import { TemplatePanel } from "./TemplatePanel";
 
-const fontOptions = ["宋体", "Times New Roman", "Calibri", "Arial", "仿宋", "Consolas"];
-const fontSizeOptions = [10, 10.5, 11, 12, 14, 16, 18, 20, 22, 24, 28];
+const fontOptions = ["宋体", "黑体", "仿宋", "楷体", "Times New Roman", "Calibri", "Arial", "Consolas"];
+const fontSizeOptions = [
+  { label: "六号 (7.5 pt)", value: 7.5 },
+  { label: "小五 (9 pt)", value: 9 },
+  { label: "10 pt", value: 10 },
+  { label: "五号 (10.5 pt)", value: 10.5 },
+  { label: "11 pt", value: 11 },
+  { label: "小四 (12 pt)", value: 12 },
+  { label: "四号 (14 pt)", value: 14 },
+  { label: "小三 (15 pt)", value: 15 },
+  { label: "三号 (16 pt)", value: 16 },
+  { label: "小二 (18 pt)", value: 18 },
+  { label: "20 pt", value: 20 },
+  { label: "二号 (22 pt)", value: 22 },
+  { label: "小一 (24 pt)", value: 24 },
+  { label: "一号 (26 pt)", value: 26 },
+  { label: "28 pt", value: 28 },
+  { label: "小初 (36 pt)", value: 36 },
+  { label: "初号 (42 pt)", value: 42 }
+];
 
 const alignOptions = [
   { label: "左对齐", value: "left" },
@@ -18,6 +36,15 @@ const headingNumberFormatOptions = [
   { label: "大写字母（A,B,C）", value: "UPPER_LETTER" },
   { label: "小写字母（a,b,c）", value: "LOWER_LETTER" }
 ];
+
+function normalizeColorValue(value) {
+  const normalized = String(value ?? "")
+    .trim()
+    .replace(/^#/, "")
+    .toUpperCase();
+
+  return /^[0-9A-F]{6}$/.test(normalized) ? normalized : "000000";
+}
 
 function NumberInput({ value, onChange, step = "1", min = "0" }) {
   return (
@@ -47,12 +74,18 @@ function FontSizeSelect({ value, onChange }) {
   return (
     <select value={value} onChange={(event) => onChange(Number(event.target.value))}>
       {fontSizeOptions.map((size) => (
-        <option key={size} value={size}>
-          {size}
+        <option key={size.value} value={size.value}>
+          {size.label}
         </option>
       ))}
     </select>
   );
+}
+
+function ColorInput({ value, onChange }) {
+  const normalized = normalizeColorValue(value);
+
+  return <input type="color" value={`#${normalized}`} onChange={(event) => onChange(event.target.value.replace(/^#/, ""))} />;
 }
 
 function AlignSelect({ value, onChange, options = alignOptions }) {
@@ -86,13 +119,17 @@ function TextStyleFields({
   allowBold = false,
   allowIndent = false,
   showLineSpacing = false,
-  splitBodyFonts = false
+  splitBodyFonts = false,
+  splitHeadingFonts = false,
+  allowColor = false
 }) {
+  const useSplitFonts = splitBodyFonts || splitHeadingFonts;
+
   return (
     <details open className="style-group">
       <summary>{title}</summary>
       <div className="field-grid">
-        {splitBodyFonts ? (
+        {useSplitFonts ? (
           <>
             <label>
               中文字体
@@ -129,6 +166,13 @@ function TextStyleFields({
           </label>
         )}
 
+        {allowColor && (
+          <label>
+            标题颜色
+            <ColorInput value={style.color} onChange={(value) => onChange("color", value)} />
+          </label>
+        )}
+
         <label>
           段前间距(pt)
           <NumberInput value={style.spacingBefore} onChange={(value) => onChange("spacingBefore", value)} step="0.5" />
@@ -147,7 +191,7 @@ function TextStyleFields({
         {showLineSpacing && (
           <>
             <label>
-              行距模式
+              行距
               <select value={style.lineSpacingType} onChange={(event) => onChange("lineSpacingType", event.target.value)}>
                 <option value="single">单倍</option>
                 <option value="oneHalf">1.5 倍</option>
@@ -155,14 +199,16 @@ function TextStyleFields({
               </select>
             </label>
 
-            <label>
-              行距值(pt)
-              <NumberInput
-                value={style.lineSpacingValue}
-                onChange={(value) => onChange("lineSpacingValue", value)}
-                step="0.5"
-              />
-            </label>
+            {style.lineSpacingType === "fixed" && (
+              <label>
+                固定值(pt)
+                <NumberInput
+                  value={style.lineSpacingValue}
+                  onChange={(value) => onChange("lineSpacingValue", value)}
+                  step="0.5"
+                />
+              </label>
+            )}
           </>
         )}
 
@@ -271,6 +317,8 @@ export function StylePanel({
         title="一级标题（Heading 1）"
         style={styleConfig.heading1}
         allowBold
+        allowColor
+        splitHeadingFonts
         onChange={(field, value) => onStyleChange("heading1", field, value)}
       />
 
@@ -278,6 +326,8 @@ export function StylePanel({
         title="二级标题（Heading 2）"
         style={styleConfig.heading2}
         allowBold
+        allowColor
+        splitHeadingFonts
         onChange={(field, value) => onStyleChange("heading2", field, value)}
       />
 
@@ -285,6 +335,8 @@ export function StylePanel({
         title="三级标题（Heading 3）"
         style={styleConfig.heading3}
         allowBold
+        allowColor
+        splitHeadingFonts
         onChange={(field, value) => onStyleChange("heading3", field, value)}
       />
 

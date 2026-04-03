@@ -1,17 +1,71 @@
 {
-  "name": "md-to-docx-standardizer",
-  "version": "1.0.0",
-  "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
-  "scripts": {
-    "dev": "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
-    "build": "npm run build --workspace frontend",
-    "start": "npm run start --workspace backend"
-  },
-  "devDependencies": {
-    "concurrently": "^9.1.2"
-  }
+    "name":  "md-to-docx-standardizer",
+    "version":  "1.0.0",
+    "private":  true,
+    "main":  "desktop/main.cjs",
+    "workspaces":  [
+                       "frontend",
+                       "backend"
+                   ],
+    "scripts":  {
+                    "dev":  "npm run dev:web",
+                    "dev:web":  "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\"",
+                    "dev:desktop":  "concurrently \"npm run dev --workspace backend\" \"npm run dev --workspace frontend\" \"wait-on tcp:4000 http://localhost:5173 \u0026\u0026 electron .\"",
+                    "build":  "npm run build:web",
+                    "build:web":  "npm run build --workspace frontend",
+                    "start":  "npm run start --workspace backend",
+                    "start:desktop":  "npm run build:web \u0026\u0026 electron .",
+                    "pack:win":  "npm run build:web \u0026\u0026 electron-builder --win nsis",
+                    "pack:portable":  "npm run build:web \u0026\u0026 electron-builder --win portable"
+                },
+    "dependencies":  {
+                         "md-to-docx-backend":  "file:backend"
+                     },
+    "devDependencies":  {
+                            "concurrently":  "^9.1.2",
+                            "electron":  "^28.3.3",
+                            "electron-builder":  "^24.13.3",
+                            "wait-on":  "^8.0.1"
+                        },
+    "build":  {
+                  "appId":  "com.codex.mdtodocx",
+                  "productName":  "MarkdownToDocx",
+                  "directories":  {
+                                      "output":  "release"
+                                  },
+                  "files":  [
+                                "desktop/**/*",
+                                "backend/src/**/*",
+                                "frontend/dist/**/*",
+                                "backend/package.json",
+                                "package.json"
+                            ],
+                  "extraMetadata":  {
+                                        "main":  "desktop/main.cjs"
+                                    },
+                  "win":  {
+                              "target":  [
+                                             {
+                                                 "target":  "nsis",
+                                                 "arch":  [
+                                                              "x64"
+                                                          ]
+                                             },
+                                             {
+                                                 "target":  "portable",
+                                                 "arch":  [
+                                                              "x64"
+                                                          ]
+                                             }
+                                         ],
+                              "signAndEditExecutable":  false
+                          },
+                  "nsis":  {
+                               "oneClick":  false,
+                               "allowToChangeInstallationDirectory":  true
+                           },
+                  "electronDownload":  {
+                                           "mirror":  "https://cdn.npmmirror.com/binaries/electron/"
+                                       }
+              }
 }

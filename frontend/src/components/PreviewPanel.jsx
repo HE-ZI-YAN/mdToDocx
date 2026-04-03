@@ -1,4 +1,13 @@
-﻿import { useMemo } from "react";
+import { useMemo } from "react";
+
+function normalizeColorValue(value) {
+  const normalized = String(value ?? "")
+    .trim()
+    .replace(/^#/, "")
+    .toUpperCase();
+
+  return /^[0-9A-F]{6}$/.test(normalized) ? normalized : "000000";
+}
 
 function paragraphLineHeight(paragraphStyle) {
   if (paragraphStyle.lineSpacingType === "fixed") {
@@ -186,22 +195,31 @@ export function PreviewPanel({ markdownHtml, styleConfig }) {
 
   const previewStyle = {
     "--h1-font": styleConfig.heading1.fontFamily,
+    "--h1-font-zh": styleConfig.heading1.chineseFontFamily || styleConfig.heading1.fontFamily,
+    "--h1-font-en": styleConfig.heading1.englishFontFamily || "Times New Roman",
     "--h1-size": `${styleConfig.heading1.fontSize}pt`,
     "--h1-weight": styleConfig.heading1.bold ? "700" : "400",
+    "--h1-color": `#${normalizeColorValue(styleConfig.heading1.color)}`,
     "--h1-before": `${styleConfig.heading1.spacingBefore}pt`,
     "--h1-after": `${styleConfig.heading1.spacingAfter}pt`,
     "--h1-align": styleConfig.heading1.align,
 
     "--h2-font": styleConfig.heading2.fontFamily,
+    "--h2-font-zh": styleConfig.heading2.chineseFontFamily || styleConfig.heading2.fontFamily,
+    "--h2-font-en": styleConfig.heading2.englishFontFamily || "Times New Roman",
     "--h2-size": `${styleConfig.heading2.fontSize}pt`,
     "--h2-weight": styleConfig.heading2.bold ? "700" : "400",
+    "--h2-color": `#${normalizeColorValue(styleConfig.heading2.color)}`,
     "--h2-before": `${styleConfig.heading2.spacingBefore}pt`,
     "--h2-after": `${styleConfig.heading2.spacingAfter}pt`,
     "--h2-align": styleConfig.heading2.align,
 
     "--h3-font": styleConfig.heading3.fontFamily,
+    "--h3-font-zh": styleConfig.heading3.chineseFontFamily || styleConfig.heading3.fontFamily,
+    "--h3-font-en": styleConfig.heading3.englishFontFamily || "Times New Roman",
     "--h3-size": `${styleConfig.heading3.fontSize}pt`,
     "--h3-weight": styleConfig.heading3.bold ? "700" : "400",
+    "--h3-color": `#${normalizeColorValue(styleConfig.heading3.color)}`,
     "--h3-before": `${styleConfig.heading3.spacingBefore}pt`,
     "--h3-after": `${styleConfig.heading3.spacingAfter}pt`,
     "--h3-align": styleConfig.heading3.align,
