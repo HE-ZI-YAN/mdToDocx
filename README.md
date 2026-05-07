@@ -124,6 +124,43 @@ npm run dev
 npm run build
 ```
 
+## Docker 运行（Web 版）
+
+Docker 镜像会在构建阶段编译前端到 `frontend/dist`，运行时由后端同端口托管（`SERVE_FRONTEND=1`），因此只需要暴露一个端口。
+
+1. 使用 docker compose 一键启动：
+
+```bash
+docker compose up --build
+```
+
+2. 打开浏览器：
+
+- `http://localhost:4000`
+
+说明：
+
+- `docker-compose.yml` 默认把自定义模板目录挂载到命名卷（`TEMPLATE_STORAGE_DIR=/data/templates`），容器重启不会丢失。
+- 如需改端口，可设置环境变量 `PORT`，并同步调整端口映射。
+
+## GitHub Actions（自动构建 Docker 镜像）
+
+仓库已提供工作流：当你 push 到 `main/master` 或打 `v*` 标签时，会自动构建镜像并发布到 GitHub Container Registry（GHCR）：
+
+- 镜像地址：`ghcr.io/<owner>/<repo>`
+
+使用示例（需要把 `<owner>/<repo>` 替换成你的仓库名）：
+
+```bash
+docker pull ghcr.io/<owner>/<repo>:latest
+docker run --rm -p 4000:4000 ghcr.io/<owner>/<repo>:latest
+```
+
+说明：
+
+- PR 会执行构建，但不会推送镜像。
+- 发布到 GHCR 需要仓库启用 GitHub Packages（默认支持），并允许 Actions 写入 packages（工作流已声明 `packages: write`）。
+
 ## 备注
 
 - 自定义模板保存路径：`backend/src/data/templates/*.json`

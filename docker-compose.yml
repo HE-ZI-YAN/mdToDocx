@@ -1,0 +1,15 @@
+services:
+  md-to-docx:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: 4000
+      HOST: 0.0.0.0
+      SERVE_FRONTEND: "1"
+      TEMPLATE_STORAGE_DIR: /data/templates
+    volumes:
+      - templates:/data/templates
+
+volumes:
+  templates:

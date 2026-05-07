@@ -3,6 +3,7 @@ dist
 build
 .DS_Store
 *.log
+.omx/
 backend/src/data/templates/*.json
 backend/src/data/exports/*.docx
 release
